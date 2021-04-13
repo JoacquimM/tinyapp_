@@ -51,7 +51,7 @@ app.get("/urls/:shortURL", (req, res) =>{
 
 
 // -- POST ROUTES --
-
+// -- creates new short url --
 app.post("/urls", (req, res) => {
   console.log(" REQ BODY -->",req.body);  // Log the POST request body to the console
   console.log(urlDatabase);
@@ -61,7 +61,13 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${userShortUrl}`); 
   
 });
-
+// -- DELETE --
+app.post('/urls/:shortURL/delete',(req, res)=>{
+  const shortURLDelete = req.params.shortURL;
+  delete urlDatabase[shortURLDelete];
+  res.redirect(`/urls`);
+  // console.log(req.params.shortURL);
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

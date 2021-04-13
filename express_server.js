@@ -79,7 +79,7 @@ app.post("/urls/:shortURL", (req, res)=>{
   console.log(req.body)
 })
 
-// -- POST ROUTES --
+// -- COOKIES --
 
 app.post("/login", (req, res)=>{
   const userNameEntered = req.body.username;
@@ -90,6 +90,13 @@ app.post("/login", (req, res)=>{
   
   res.redirect(`/urls`);
 })
+
+// LOGOUT //
+app.post("/logout", (req, res) => {
+  const userNameEntered = req.body.username;
+  res.clearCookie("username", userNameEntered)
+  res.redirect(`/urls`);
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

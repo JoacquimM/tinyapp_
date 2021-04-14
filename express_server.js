@@ -78,7 +78,7 @@ class NewUsers {
 //----------------------------------------------------------------
 // -- GET ROUTES --
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.send("hello :)");
 });
 
 app.get("/urls.json", (req, res) => {
@@ -104,23 +104,25 @@ app.get("/urls", (req, res) =>{
 })
 // -- new url page --
 app.get("/urls/new", (req, res) => {
-  const templateVars = {username: req.cookies["username"], userEmail: users[req.cookies.user_id].email}
+  const templateVars = { userEmail: users[req.cookies.user_id].email}
   res.render("urls_new", templateVars);
 });
 
 // -- short url page --
 app.get("/urls/:shortURL", (req, res) =>{
   console.log(" REQ PARAMS -->",req.params);
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies[username], userEmail: users[req.cookies.user_id].email};
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL],  userEmail: users[req.cookies.user_id].email};
   res.render("urls_show", templateVars);
 })
 
 // register
 app.get("/register", (req, res) => {
+  if ("user_id"){ res.redirect(`/urls`)}
   res.render("register");
 });
 //-- login -- 
 app.get("/login", (req, res) => {
+  if ("user_id"){ res.redirect(`/urls`)}
   res.render("login");
 
 });
@@ -154,10 +156,21 @@ app.post("/urls/:shortURL", (req, res)=>{
 // -- COOKIES --
 
 app.post("/login", (req, res)=>{
-  const userNameEntered = req.body.username;
+  const userNameEntered = req.body.email; // was .username
+  console.log("USERNAME -->",userNameEntered)
+  const userPasswordEntered = req.body.password;
+  if (!getUserByEmail(userNameEntered)) { return res.status(403).send("Email can not be found")};
+  const userFromEamil = getUserByEmail(userNameEntered);
+  console.log("USER FROM EMAIL -->",userFromEamil);
+  if(userPasswordEntered !== userFromEamil.password){
+
+    return res.status(403).send("invalid password")
+  }
+  res.cookie("user_id", userFromEamil.id );
+
   console.log("USER NAME -->",userNameEntered)
   // res.cookie( "username", userNameEntered);
-  res.cookie( "user_id", userNameEntered);
+  // res.cookie( "user_id", userNameEntered);
   console.log("REQ COOKIES -->",req.cookies);
 
   

@@ -12,24 +12,25 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup"  
+    style="justify-content: space-between">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
         <% if ( !userEmail ){ %>
-        <form class="form-inline" action="/login" method="POST">
-          <div class="form-group mb-2">
-            <input
-              class="form-control"
-              type="text"
-              name="username"
-              placeholder="Enter username"
-              style="width: 300px; margin: 1em"
-            />
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-        </form>
+          <div
+          class="navbar-nav nav-item"
+          style="justify-content: end; align-items: center"
+        >
+          <label for="longURL"></label>
+          <a class="nav-item nav-link" href="/register"
+            ><button class= "btn btn-primary" type="submit">Register</button></a
+          >
+          <a class="nav-item nav-link" href="/login"
+            ><button class="btn btn-primary" type="submit">Login</button></a
+          >
+        </div>
         <% } else { %>
         <div>Loged in as: <%= userEmail %></div>
 

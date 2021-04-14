@@ -92,7 +92,14 @@ app.get("/hello", (req, res) => {
 
 // -- urls page -- 
 app.get("/urls", (req, res) =>{
-  const templateVars = {urls: urlDatabase, username: req.cookies["username"], userEmail: users[req.cookies.user_id].email};
+  // const templateVars = {urls: urlDatabase, username: req.cookies["username"], userEmail: users[req.cookies.user_id].email};
+  // res.render("urls_index", templateVars);
+  const user = users[req.cookies.user_id]; // user obj
+   
+  let userEmail;
+  if(user){ userEmail = user.email};
+  console.log(user, userEmail);
+  const templateVars = { urls: urlDatabase ,  userEmail: userEmail};
   res.render("urls_index", templateVars);
 })
 // -- new url page --
@@ -111,6 +118,11 @@ app.get("/urls/:shortURL", (req, res) =>{
 // register
 app.get("/register", (req, res) => {
   res.render("register");
+});
+//-- login -- 
+app.get("/login", (req, res) => {
+  res.render("login");
+
 });
 
 //----------------------------------------------------------------

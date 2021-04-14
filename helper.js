@@ -1,4 +1,6 @@
 
+
+
 //--------------- HELPER FUNCTIONS ---------------------
 
 const generateRandomString =() => {
@@ -15,4 +17,23 @@ const generateRandomString =() => {
   
 //----------------------------------------------------------------
 
-module.exports = generateRandomString;
+/*  getUserByEmail
+  returns the user object takes 
+  email and look in teh db for the matching 
+  email if its there returns user obj. 
+*/
+
+// const getUserByEmail = (email, users) => {
+//   for (let key of Object.keys(users)) {
+//     const user = users[key];
+//     console.log("THIS IS getUserByEmail --->",user, key);
+//     if( user.email === email){
+//       return user;
+//     }
+//   }
+//   return undefined;
+// }
+
+
+
+module.exports = {generateRandomString};

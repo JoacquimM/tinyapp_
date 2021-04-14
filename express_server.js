@@ -28,9 +28,14 @@ app.use(cookieParser());
 //----------------------------------------------------------------
 // -- DATA --
 // -- URL Database -- 
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
+
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "userRandomID" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "user2RandomID" }
 };
 
 // -- User Database ---
@@ -104,6 +109,11 @@ app.get("/urls", (req, res) =>{
 })
 // -- new url page --
 app.get("/urls/new", (req, res) => {
+  const currentUser = req.cookies.user_id;
+  if (! currentUser) { 
+    res.redirect("/login");
+    return;
+  }
   const templateVars = { userEmail: users[req.cookies.user_id].email}
   res.render("urls_new", templateVars);
 });
@@ -117,14 +127,27 @@ app.get("/urls/:shortURL", (req, res) =>{
 
 // register
 app.get("/register", (req, res) => {
-  if ("user_id"){ res.redirect(`/urls`)}
-  res.render("register");
+  const userCookieID = req.cookies.user_id;
+   if (!userCookieID){res.render("register") };
+  res.redirect(`/urls`)
 });
 //-- login -- 
 app.get("/login", (req, res) => {
-  if ("user_id"){ res.redirect(`/urls`)}
-  res.render("login");
+  const userCookieID = req.cookies.user_id;
+   if (!userCookieID){ res.render("login")};
+  res.redirect(`/urls`)
 
+});
+
+// u/:id GET - verifies and routes to external website using longURL link
+app.get("/u/:shortURL", (req, res) => {
+  const longURL = urlDatabase[req.params.shortURL].longURL;
+  console.log(longURL);
+  // If the retrieved longURL is undefined, go to the "url not found" page.
+  if (!longURL) {
+    res.render("error_urls", { errorMessage: "Uh-OH! This url is not in our database." });
+  }
+  res.redirect(longURL);
 });
 
 //----------------------------------------------------------------

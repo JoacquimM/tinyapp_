@@ -23,25 +23,25 @@ const generateRandomString =() => {
   email if its there returns user obj. 
 */
 
-// const getUserByEmail = (email, users) => {
-//   for (let key of Object.keys(users)) {
-//     const user = users[key];
-//     console.log("THIS IS getUserByEmail --->",user, key);
-//     if( user.email === email){
-//       return user;
-//     }
-//   }
-//   return undefined;
-// }
+const getUserByEmail = (email, users) => {
+  for (let key of Object.keys(users)) {
+    const user = users[key];
+    // console.log("THIS IS getUserByEmail --->",user, key);
+    if( user.email === email){
+      return user;
+    }
+  }
+  return undefined;
+}
 
 //----------------------------------------------------------------
 // returns all the urls in the db identified by user.
 
 const urlsForUser =(id,urlDatabase) => {
   let tempUrls = {};
-  console.log("URL dataBase -->", urlDatabase);
+  // console.log("URL dataBase -->", urlDatabase);
   for (let key in urlDatabase) {
-    console.log("url DB key-->", urlDatabase[key]);
+    // console.log("url DB key-->", urlDatabase[key]);
     if (urlDatabase[key].userID === id) {
       tempUrls[key] = urlDatabase[key]
     }  
@@ -52,4 +52,4 @@ const urlsForUser =(id,urlDatabase) => {
 
 
 
-module.exports = {generateRandomString, urlsForUser};
+module.exports = {generateRandomString, urlsForUser, getUserByEmail};

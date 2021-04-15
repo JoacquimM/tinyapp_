@@ -13,7 +13,8 @@ const getUserByEmail = (email) => {
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const {generateRandomString} = require("./helper.js");
+//--helper functions --
+const {generateRandomString, urlsForUser} = require("./helper.js");
 // -- ejs --
 app.set("view engine", "ejs");
 
@@ -99,12 +100,20 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) =>{
   // const templateVars = {urls: urlDatabase, username: req.cookies["username"], userEmail: users[req.cookies.user_id].email};
   // res.render("urls_index", templateVars);
+  
   const user = users[req.cookies.user_id]; // user obj
-   
+  if (!user){res.send("<html><body>Looks like you need to login <a href='/login'>Here</a> or regester <a href='/register'>Here</a></body></html>\n");}
   let userEmail;
-  if(user){ userEmail = user.email};
-  console.log(user, userEmail);
-  const templateVars = { urls: urlDatabase ,  userEmail: userEmail};
+  // if(user){ userEmail = user.email};
+  // console.log(user, userEmail);
+  // const templateVars = { urls: urlDatabase ,  userEmail: userEmail};
+  // res.render("urls_index", templateVars);
+  //---------------------------------
+  let templateVars = { urls:{}, email:"", longURL:"", shortURL:"",};
+  if (user) { 
+    userEmail = user.email;
+    templateVars = { urls: urlsForUser(user.id,urlDatabase) ,  userEmail: userEmail, longURL:"", shortURL: req.params.shortURL};
+  }
   res.render("urls_index", templateVars);
 })
 // -- new url page --
@@ -120,6 +129,8 @@ app.get("/urls/new", (req, res) => {
 
 // -- short url page --
 app.get("/urls/:shortURL", (req, res) =>{
+  const user = users[req.cookies.user_id]; // user obj
+  if(!user){res.send("<html><body>Hey there! Looks like you need to login <a href='/login'>Here</a> or regester <a href='/register'>Here</a></body></html>\n");}
   console.log(" REQ PARAMS -->",req.params);
   const templateVars = { urls: urlDatabase, shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL,  userEmail: users[req.cookies.user_id].email};
   res.render("urls_show", templateVars);
@@ -178,7 +189,7 @@ app.post("/urls/:shortURL", (req, res)=>{
   // console.log(req.body)
   let shortURLUpdate = req.params.shortURL;
   let newURLEdit = req.body.user_input;
-  console.log("This is teh new url -->", req.body);
+  console.log("This is the new url -->", req.body);
   if (req.cookies.user_id  === urlDatabase[shortURLUpdate].userID) {
     urlDatabase[shortURLUpdate].longURL = newURLEdit;
     res.redirect(`/urls`);

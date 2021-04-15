@@ -34,6 +34,22 @@ const generateRandomString =() => {
 //   return undefined;
 // }
 
+//----------------------------------------------------------------
+// returns all the urls in the db identified by user.
+
+const urlsForUser =(id,urlDatabase) => {
+  let tempUrls = {};
+  console.log("URL dataBase -->", urlDatabase);
+  for (let key in urlDatabase) {
+    console.log("url DB key-->", urlDatabase[key]);
+    if (urlDatabase[key].userID === id) {
+      tempUrls[key] = urlDatabase[key]
+    }  
+  }
+  return tempUrls;
+}
 
 
-module.exports = {generateRandomString};
+
+
+module.exports = {generateRandomString, urlsForUser};

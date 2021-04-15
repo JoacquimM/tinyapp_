@@ -121,7 +121,7 @@ app.get("/urls/new", (req, res) => {
 // -- short url page --
 app.get("/urls/:shortURL", (req, res) =>{
   console.log(" REQ PARAMS -->",req.params);
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL],  userEmail: users[req.cookies.user_id].email};
+  const templateVars = { urls: urlDatabase, shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL,  userEmail: users[req.cookies.user_id].email};
   res.render("urls_show", templateVars);
 })
 
@@ -158,7 +158,9 @@ app.post("/urls", (req, res) => {
   console.log(urlDatabase);
   const userLongUrl = req.body.longURL;
   const userShortUrl = generateRandomString();
-  urlDatabase[userShortUrl] = userLongUrl;
+  // urlDatabase[userShortUrl] = userLongUrl;
+  const userId =  req.cookies.user_id;
+  urlDatabase[userShortUrl] = {longURL:userLongUrl , userID: userId}; 
   res.redirect(`/urls/${userShortUrl}`); 
   
 });
@@ -172,8 +174,16 @@ app.post("/urls/:shortURL/delete",(req, res)=>{
 
 // -- UPDATE/ EDIT Url --
 app.post("/urls/:shortURL", (req, res)=>{
-  const shortURLDelete = req.params.shortURL;
-  console.log(req.body)
+  // const shortURLDelete = req.params.shortURL;
+  // console.log(req.body)
+  let shortURLUpdate = req.params.shortURL;
+  let newURLEdit = req.body.user_input;
+  console.log("This is teh new url -->", req.body);
+  if (req.cookies.user_id  === urlDatabase[shortURLUpdate].userID) {
+    urlDatabase[shortURLUpdate].longURL = newURLEdit;
+    res.redirect(`/urls`);
+  }
+  res.status(401).send("You are not authorized"); 
 })
 
 // -- COOKIES --
